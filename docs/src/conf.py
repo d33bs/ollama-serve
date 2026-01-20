@@ -13,6 +13,19 @@
 import pathlib
 import sys
 
+try:
+    import pydata_sphinx_theme
+except ImportError:  # pragma: no cover - doc build fallback
+    pydata_sphinx_theme = None
+
+try:
+    import myst_parser  # noqa: F401
+except ImportError as exc:  # pragma: no cover - doc build fallback
+    raise RuntimeError(
+        "myst_parser is required to build the Markdown docs. "
+        "Install it with the docs dependencies."
+    ) from exc
+
 basedir = str(pathlib.Path(__file__).parent.parent.parent.resolve())
 
 sys.path.insert(0, basedir)
@@ -30,12 +43,13 @@ author = "DBMI Community"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "myst_nb",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
-    "pydata_sphinx_theme",
+    "myst_parser",
 ]
+if pydata_sphinx_theme is not None:
+    extensions.append("pydata_sphinx_theme")
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -45,41 +59,41 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []  # type: ignore
 
+root_doc = "index"
+master_doc = "index"
+source_suffix = {
+    ".md": "markdown",
+}
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "pydata_sphinx_theme"
+html_theme = "pydata_sphinx_theme" if pydata_sphinx_theme is not None else "alabaster"
 
-html_theme_options = {
-    "header_links_before_dropdown": 5,
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/d33bs/ollama-serve",
-            "icon": "fa-brands fa-github",
+if pydata_sphinx_theme is not None:
+    html_theme_options = {
+        "header_links_before_dropdown": 5,
+        "icon_links": [
+            {
+                "name": "GitHub",
+                "url": "https://github.com/d33bs/ollama-serve",
+                "icon": "fa-brands fa-github",
+            },
+        ],
+        "logo": {"text": "ollama-serve"},
+        "use_edit_page_button": False,
+        "show_toc_level": 1,
+        "navbar_align": "left",
+        "navbar_center": ["navbar-nav"],
+        "footer_start": ["copyright"],
+        "footer_center": ["sphinx-version"],
+        "secondary_sidebar_items": {
+            "**/*": ["page-toc", "edit-this-page", "sourcelink"],
         },
-    ],
-    "logo": {"text": "ollama-serve"},
-    "use_edit_page_button": False,
-    "show_toc_level": 1,
-    "navbar_align": "left",
-    "navbar_center": ["navbar-nav"],
-    "footer_start": ["copyright"],
-    "footer_center": ["sphinx-version"],
-    "secondary_sidebar_items": {
-        "**/*": ["page-toc", "edit-this-page", "sourcelink"],
-    },
-}
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
-html_css_files = ["custom.css"]
+    }
+else:
+    html_theme_options = {}
 
 # set option to avoid rendering default variables
 autodoc_preserve_defaults = True
-
-# enable anchor creation
-myst_heading_anchors = 3
