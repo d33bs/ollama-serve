@@ -299,6 +299,7 @@ def test_run_ollama_server(
     assert calls == popen_calls
 
 
+@pytest.mark.integration
 def test_run_ollama_server_integration() -> None:
     """
     Exercise run_ollama_server against a real Ollama installation.

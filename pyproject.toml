@@ -77,6 +77,10 @@ lint.per-file-ignores."tests/test_main.py" = [ "PLR0913" ]
 
 [tool.pytest.ini_options]
 pythonpath = [ "." ]
+addopts = "-m 'not integration'"
+markers = [
+  "integration: runs tests that require a real Ollama installation",
+]
 
 [tool.poe.tasks]
 # tasks for development environments

@@ -1,22 +1,54 @@
 # ollama-serve
 
-A Python package that ensures the Ollama server is running and ready with the models your project expects.
+Keep your local Ollama server warm and your favorite models ready. This package
+offers small, composable helpers to check server health, start it when needed,
+and pull models on demand.
 
-## Post template copy instructions
+## Install
 
-While we provide some customizations to the files in this template based on your specification there's likely a chance some things aren't perfect.
-We recommend taking a look at each file used within this template to ensure it meets your expectations for the project you're working on.
-In addition, consider the following steps to help ensure the project is in good shape before proceeding too far.
+```bash
+uv add ollama-serve
+```
 
-- [ ] Remove files you plan on not using (e.g. `src/notebooks`, `.github/workflows/publish-pypi.yml`, etc.).
-- [ ] Update the `LICENSE` file based on the project.
-- [ ] Update the `CITATION.cff` file based on the project.
-- [ ] Update the project dependencies using `uv remove` or `uv add`.
-- [ ] Update the `pyproject.toml` file based on the project.
-- [ ] Enable `pre-commit-lite` to help automate corrections to code during pull request updates. Otherwise, consider removing the step: labeled with: `pre-commit-ci/lite-action` within `.github/workflows/run-tests.yml`.
-- [ ] Enable private security vulnerability issue reporting within the repo settings (e.g. https://github.com/repo_org/repo_name/settings/security_analysis)
-- [ ] Enable [branch protection rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) to require one pull request review approval per pull request to help with maintainer expectations.
-- [ ] Add collaborators to access the repository.
-- [ ] Create a `pages` branch and enable GitHub Pages on the repository (for documentation).
-- [ ] Update the GitHub repository description.
-- [ ] Remove these instructions!
+## Quick start
+
+```python
+from ollama_serve import ensure_model_and_server_ready
+
+if ensure_model_and_server_ready("llama3:latest"):
+    print("Ready to chat.")
+```
+
+## Common flows
+
+```python
+from ollama_serve import (
+    is_ollama_running,
+    run_ollama_server,
+    is_model_installed,
+    install_model,
+)
+
+is_ollama_running()
+run_ollama_server()
+is_model_installed("llama3:latest")
+install_model("llama3:latest")
+```
+
+## Tips
+
+- If Ollama is not on your PATH, install it from https://ollama.com/download.
+- Use smaller timeout values for snappier "is it up?" checks in dev loops.
+
+## Compatibility
+
+- macOS, Linux, and Windows (where Ollama runs locally).
+- Requires the `ollama` CLI on your PATH.
+
+## Logging and config
+
+- Uses standard Python logging via `logging.getLogger("ollama_serve")`.
+- Default settings can be overridden with env vars:
+  - `OLLAMA_SERVE_TIMEOUT` (seconds, default `0.2`)
+  - `OLLAMA_SERVE_RETRIES` (default `1`)
+  - `OLLAMA_SERVE_RETRY_DELAY` (seconds, default `0.2`)
