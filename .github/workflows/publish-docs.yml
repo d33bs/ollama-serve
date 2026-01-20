@@ -24,7 +24,9 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v6
+      - name: Install docs dependencies
+        run: uv sync --group docs --frozen
       - name: Build documentation
         run: |
           mkdir pages
