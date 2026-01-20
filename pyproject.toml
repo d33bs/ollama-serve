@@ -73,6 +73,7 @@ lint.select = [
 ]
 # Ignore `F401` (unused imports) for `__init__.py` file
 lint.per-file-ignores."__init__.py" = [ "F401" ]
+lint.per-file-ignores."src/ollama_serve/main.py" = [ "PLR0913" ]
 lint.per-file-ignores."tests/test_main.py" = [ "PLR0913" ]
 
 [tool.pytest.ini_options]
