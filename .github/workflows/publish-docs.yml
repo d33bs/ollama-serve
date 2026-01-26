@@ -10,6 +10,9 @@ on:
     types:
       - published
 
+permissions:
+  contents: write
+
 jobs:
   build:
     # only build and deploy docs if the actor is not dependabot
@@ -41,3 +44,4 @@ jobs:
         with:
           branch: pages
           folder: pages
+          token: ${{ secrets.GITHUB_TOKEN }}
